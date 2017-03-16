@@ -90,7 +90,7 @@ class Backoffice extends CI_Controller {
 	public function product(){
 		$this->load->model('products');
 		$product = $this->products->getAllProducts();
-		
+		// echo "<pre>";print_r($product);exit;
 		$data['title']='Product Listing';
 		$data['view']='product.php';
 		$data['userData']=$product;
@@ -119,5 +119,18 @@ class Backoffice extends CI_Controller {
 	public function logout(){
 		$this->session->sess_destroy();
 		header('Location:'.base_url('backoffice/login'));
+	}
+
+	public function changeProductStatus(){
+		$productArr = $this->input->post('product');
+		$productStr = implode($productArr);
+		$this->load->model('products');
+		$product = $this->products->updateProductStatus($productStr);
+		if($product > 0){
+			$this->session->set_flashdata('success','Product/s status updated successfully');
+		}else{
+			$this->session->set_flashdata('error','Error occured. Please try after sometime.');
+		}
+		header('Location:'.base_url('backoffice/product'));
 	}
 }
