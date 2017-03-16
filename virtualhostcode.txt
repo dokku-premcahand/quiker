@@ -1,0 +1,12 @@
+Listen 8888
+
+<VirtualHost *:8888>   
+	DocumentRoot "C:\wamp\www\quiker" 
+	ServerName localhost
+	<Directory C:/wamp/www/quiker>
+		Options Indexes FollowSymLinks Includes ExecCGI
+		AllowOverride All
+		Order deny,allow
+		Allow from all 
+	</Directory>
+</VirtualHost>
