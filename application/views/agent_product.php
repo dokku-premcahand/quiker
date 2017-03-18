@@ -23,17 +23,10 @@
 	?>
 	<form class="col-lg-offset-3 col-lg-6" action="<?php echo base_url('agent/products')?>" method="POST" enctype="multipart/form-data">
 		<div class="form-group col-lg-12">
-			<label for="Name" class="col-lg-4">Shop Name<span style="color: red;">*</span></label>
+			<label for="Name" class="col-lg-4">Name<span style="color: red;">*</span></label>
 			<div class="col-lg-8">
-				<input type="text" class="form-control" id="shopname" placeholder="Shop Name" name="shopname" 
-				value="<?php if(isset($post['shopname']) && !empty($post['shopname'])){echo $post['shopname'];} ?>">
-			</div>
-		</div>
-		<div class="form-group col-lg-12">
-			<label for="Name" class="col-lg-4">Email Address<span style="color: red;">*</span></label>
-			<div class="col-lg-8">
-				<input type="text" class="form-control" id="address" placeholder="Email Address" name="email" 
-				value="<?php if(isset($post['address']) && !empty($post['email'])){echo $post['email'];} ?>">
+				<input type="text" class="form-control" id="name" placeholder="Name" name="name" 
+				value="<?php if(isset($post['name']) && !empty($post['name'])){echo $post['name'];} ?>">
 			</div>
 		</div>
 		<div class="form-group col-lg-12">
@@ -44,33 +37,46 @@
 			</div>
 		</div>
 		<div class="form-group col-lg-12">
-			<label for="Name" class="col-lg-4">Address<span style="color: red;">*</span></label>
+			<label for="Name" class="col-lg-4">Marital Status<span style="color: red;">*</span></label>
 			<div class="col-lg-8">
-				<textarea class="form-control" id="address" placeholder="Address" name="address" style="resize: none;height: 100px;"><?php if(isset($post['address']) && !empty($post['address'])){echo $post['address'];} ?></textarea>
-			</div>
-		</div>
-		<div class="form-group col-lg-12">
-			<label for="Name" class="col-lg-4">Category<span style="color: red;">*</span></label>
-			<div class="col-lg-8">
-				<select class="form-control" name="category">
-				<option value="">Select Category</option>
-				<option value="1" <?php if(isset($post['category']) && $post['category'] == 1){echo "selected";}?>>Shop</option>
-				<option value="2" <?php if(isset($post['category']) && $post['category'] == 2){echo "selected";}?>>Freelancer</option>
+				<select class="form-control" name="marital_status">
+				<option value="">Select Marital Status</option>
+				<option value="m" <?php if(isset($post['marital_status']) && $post['marital_status'] == 1){echo "selected";}?>>Male</option>
+				<option value="f" <?php if(isset($post['marital_status']) && $post['marital_status'] == 2){echo "selected";}?>>Female</option>
 				</select>
 			</div>
 		</div>
 		<div class="form-group col-lg-12">
-			<label for="password" class="col-lg-4">Pan</label>
+			<label for="Name" class="col-lg-4">Email Address</label>
+			<div class="col-lg-8">
+				<input type="text" class="form-control" id="address" placeholder="Email Address" name="email" 
+				value="<?php if(isset($post['email']) && !empty($post['email'])){echo $post['email'];} ?>">
+			</div>
+		</div>		
+		<div class="form-group col-lg-12">
+			<label for="password" class="col-lg-4">Image1</label>
 			<div class="col-lg-12 MG10">
 				<input type="file" name="image_1" id="image_1" class="image"/>
 			</div>
-			<label for="password" class="col-lg-4 MG10">Tin</label>
+			<label for="password" class="col-lg-4 MG10">Image2</label>
 			<div class="col-lg-12 MG10">
 				<input type="file" name="image_2" id="image_2" class="image"/>
 			</div>
-			<label for="password" class="col-lg-4 MG10">Canclled Cheque</label>
+			<label for="password" class="col-lg-4 MG10">Image3</label>
 			<div class="col-lg-12 MG10">
 				<input type="file" name="image_3" id="image_3" class="image"/>
+			</div>			
+			</div>
+			<label for="password" class="col-lg-4 MG10">Image4</label>
+			<div class="col-lg-12 MG10">
+				<input type="file" name="image_4" id="image_4" class="image"/>
+			</div>
+			<label for="password" class="col-lg-4 MG10">Image5</label>
+			<div class="col-lg-12 MG10">
+				<input type="file" name="image_5" id="image_5" class="image"/>
+			<label for="password" class="col-lg-4 MG10">Image6</label>
+			<div class="col-lg-12 MG10">
+				<input type="file" name="image_6" id="image_6" class="image"/>
 			</div>
 		</div>
 		<div class="form-group center col-lg-12">
