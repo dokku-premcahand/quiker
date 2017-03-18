@@ -66,4 +66,11 @@ class Agents extends CI_Model {
 		}
 		return $affectedRows;
 	}
+
+	public function getAgentStartDay(){
+		$sql = "SELECT ag.id,ag.name,ag.username,sd.start_date_time FROM agents ag LEFT JOIN start_day sd ON ag.id = sd.agent_id";
+		$query = $this->db->query($sql);
+		$result = $query->result();
+		return $result;
+	}
 }

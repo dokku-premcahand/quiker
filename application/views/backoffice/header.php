@@ -7,6 +7,7 @@
 <head>
 <title><?php echo $title?></title>
 <link href="<?php echo base_url('assets/css/bootstrap.css');?>" type="text/css" rel="stylesheet"/>
+<link href="<?php echo base_url('assets/css/jquery-ui.css');?>" type="text/css" rel="stylesheet">
 <link href="<?php echo base_url('assets/css/main.css');?>" type="text/css" rel="stylesheet"/>
 <link href="<?php echo base_url('assets/css/jquery.dataTables.css');?>" type="text/css" rel="stylesheet"/>
 <?php
@@ -25,7 +26,7 @@
 		<nav class="navbar navbar-default">
 			<div class="container-fluid">
 				<div class="navbar-header">
-					<a class="navbar-brand" href="#">Back Office Panel</a>
+					<a class="navbar-brand" href="" style="cursor: default;">Back Office Panel</a>
 				</div>
 
 				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">

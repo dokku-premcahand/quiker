@@ -32,6 +32,7 @@
 					<ul class="nav navbar-nav">
 						<li><a href="<?php echo base_url('admin/product');?>">Products Listing</a></li>
 						<li><a href="<?php echo base_url('admin/agent');?>">Agents Listing</a></li>
+						<li><a href="<?php echo base_url('admin/startDayAgents');?>">Agents Start Day Listing</a></li>
 						<li><a href="<?php echo base_url('admin/addAgent');?>">Add Agent</a></li>
 					</ul>
 					<ul class="nav navbar-nav navbar-right">

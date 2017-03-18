@@ -7,7 +7,7 @@ class Users extends CI_Model {
 		$result = $query->result();
 		$resultCount = count($result);
 		if(isset($resultCount) && !empty($resultCount) && $resultCount == 1){
-			$type = ($result[0]->type = 1) ? 'admin' : 'backoffice';
+			$type = ($result[0]->type == 1) ? 'admin' : 'backoffice';
 			$userdata = array('id'=>$result[0]->id,'username'=>$result[0]->username,'type'=>$type);
 			$this->session->set_userdata($userdata);
 			return $userdata;

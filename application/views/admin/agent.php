@@ -20,7 +20,7 @@
 	<?php
 		}
 	?>
-	<div class="col-lg-12 center"><h3 class="MT0">Promoters Listing</h3></div>
+	<div class="col-lg-12 center"><h3 class="MT0">Agent Listing</h3></div>
 	<div class="col-lg-12">
 		<table class="table table-bordered" id="pramotersTable">
 			<thead>
