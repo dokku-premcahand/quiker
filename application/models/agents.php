@@ -8,13 +8,20 @@ class Agents extends CI_Model {
 		$resultCount = count($result);
 		if(isset($resultCount) && !empty($resultCount) && $resultCount == 1){	
 			$userdata = array('id'=>$result[0]->id,'name'=>$result[0]->name,'username'=>$result[0]->username,
-				'status'=>$result[0]->status);
+				'status'=>$result[0]->status, 'type'=>'agent');
 			if($result[0]->status != 'disabled'){
 				$this->session->set_userdata($userdata);
 			}
 			return $userdata;
 		}
 		return false;
+	}
+	
+	public function getStatus($agentId){
+		$sql = 'SELECT status FROM agents WHERE id = '.$agentId;
+		$query = $this->db->query($sql);
+		$result = $query->result();
+		return $result[0]->status;
 	}
 	
 	public function uploadProduct($post,$todayCount){
