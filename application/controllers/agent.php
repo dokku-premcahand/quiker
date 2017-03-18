@@ -2,6 +2,28 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Agent extends CI_Controller {
+	public function __construct(){
+		parent::__construct();
+		$action = $this->router->fetch_method();
+		$this->load->model('agents');
+		if($action != "login"){
+			$session = $this->session->all_userdata();
+			if(empty($session) || $this->session->userdata('type') != 'agent'){
+				$this->session->sess_destroy();
+				header('Location:'.base_url('agent/login'));
+			}
+			else{
+				$agentId = $this->session->userdata('id');
+				$agentStatus = $this->agents->getStatus($agentId);
+				if($agentStatus != 'enabled'){
+					$this->session->sess_destroy();
+					header('Location:'.base_url('agent/login'));
+				}			
+			}			
+		}
+		
+	}
+	
 	public function login(){
 		$this->form_validation->set_rules('username', 'Username', 'required');
 		$this->form_validation->set_rules('password', 'Password', 'required');
@@ -38,15 +60,23 @@ class Agent extends CI_Controller {
 		}
 	}
 	
-	public function products(){
+	public function products($startDay = ''){
 		$agentId = $this->session->userdata('id');
 		if(isset($agentId) && !empty($agentId)){
 			$this->load->model('agents');
-			$todayCount = $this->agents->getTodayCount($agentId);
+			if($startDay == 'start_day'){
+				$data['startDay'] = $this->agents->setStartDay($agentId);
+				header('Location:'.base_url('agent/products'));
+			}
+			
+			$todayCount = $this->agents->getTodayCount($agentId);			
 			$data['todayCount'] = $todayCount;
+			$data['startDay'] = $this->agents->getStartDay($agentId);
+			
 			$this->form_validation->set_rules('name','Name','required');
 			$this->form_validation->set_rules('phonenumber','Phone Number','required|numeric');
 			$this->form_validation->set_rules('marital_status','Marital Status','required');
+			$this->form_validation->set_rules('payment_type','Type','required');
 			
 			if($this->form_validation->run() == FALSE){
 				$data['title']='Add Product';

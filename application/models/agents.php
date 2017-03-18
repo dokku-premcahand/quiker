@@ -8,7 +8,7 @@ class Agents extends CI_Model {
 		$resultCount = count($result);
 		if(isset($resultCount) && !empty($resultCount) && $resultCount == 1){	
 			$userdata = array('id'=>$result[0]->id,'name'=>$result[0]->name,'username'=>$result[0]->username,
-				'status'=>$result[0]->status);
+				'status'=>$result[0]->status, 'type'=>'agent');
 			if($result[0]->status != 'disabled'){
 				$this->session->set_userdata($userdata);
 			}
@@ -17,12 +17,42 @@ class Agents extends CI_Model {
 		return false;
 	}
 	
+	public function getStatus($agentId){
+		$sql = 'SELECT status FROM agents WHERE id = '.$agentId;
+		$query = $this->db->query($sql);
+		$result = $query->result();
+		return $result[0]->status;
+	}
+	
+	public function setStartDay($agentId){
+		$timePart = $this->getStartDay($agentId);
+		
+		if($timePart == ""){
+			$currentDateTime = date('Y-m-d H:i:s');
+			$sql = "INSERT INTO start_day value (null, ".$agentId.", '".$currentDateTime."')";
+			$this->db->query($sql);
+		}
+	}
+	
+	public function getStartDay($agentId){
+		$sql = "SELECT start_date_time FROM start_day WHERE agent_id = ".$agentId." AND start_date_time >= '".date('Y-m-d 00:00:00')."' ORDER BY id ASC LIMIT 0,1";
+		$query = $this->db->query($sql);
+		$result = $query->result();
+		$timePart = "";
+		
+		if(!empty($result)){
+			$timePart = date('h:i A', strtotime($result[0]->start_date_time));
+		}
+		
+		return $timePart;
+	}
+	
 	public function uploadProduct($post,$todayCount){
 		$agentId = $this->session->userdata('id');
 		$currentTime = date('Y-m-d H:i:s');
 		$sequence = $todayCount + 1;
 		
-		$sql = "INSERT INTO products VALUES (null,'".$post['name']."','".$post['phonenumber']."','".$post['marital_status']."',
+		$sql = "INSERT INTO products VALUES (null,'".$post['name']."','".$post['phonenumber']."','".$post['marital_status']."', '".$post['payment_type']."',
 			'".$post['email']."',1,".$sequence.", ".$agentId.", '".$currentTime."')";
 		$this->db->query($sql);
 		$affectedRows = $this->db->affected_rows();
@@ -30,7 +60,7 @@ class Agents extends CI_Model {
 	}
 	
 	public function getTodayCount($agentId){
-		$sql = "SELECT count(id) as totalCount FROM products where agent_id = ".$agentId." and date > '".date('Y-m-d 00:00:00')."'";
+		$sql = "SELECT count(id) as totalCount FROM products where agent_id = ".$agentId." and date >= '".date('Y-m-d 00:00:00')."'";
 		$query=$this->db->query($sql);
 		$result = $query->result();
 		

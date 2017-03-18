@@ -1,10 +1,20 @@
 <div class="col-lg-12">
 	<div class="col-lg-12">
 	<div class="row form-group">
-		<div class="col-lg-offset-3 col-lg-8">
+		<div class="col-lg-offset-3 col-lg-4">
 			<label>Today's Count :</label> 
 			<?php 
 				echo $todayCount;
+			?>
+		</div>
+		<div class="col-lg-5">
+			<?php 
+				if(isset($startDay) && !empty($startDay)){
+					echo "<label>Your Day started at ".$startDay."</label>";
+				}
+				else{				
+					echo '<a class="btn btn-primary" href="'.base_url().'agent/products/start_day" type="button">Start Day</a>';
+				} 
 			?>
 		</div>
 	</div>	
@@ -57,10 +67,23 @@
 		<div class="form-group col-lg-12">
 			<label for="Name" class="col-lg-4">Email Address</label>
 			<div class="col-lg-8">
-				<input type="text" class="form-control" id="address" placeholder="Email Address" name="email" 
+				<input type="text" class="form-control" id="email" placeholder="Email Address" name="email" 
 				value="<?php if(isset($post['email']) && !empty($post['email'])){echo $post['email'];} ?>">
 			</div>
-		</div>		
+		</div>
+		<div class="form-group col-lg-12">
+			<label for="payment_type" class="col-lg-4">Type<span style="color: red;">*</span></label>
+			<div class="col-lg-8">
+				<div class="col-lg-6">
+					<input type="radio" id="awas_ftcash" name="payment_type" 
+				value="Awas & Ftcash" checked> Awas & Ftcash
+				</div>
+				<div class="col-lg-6">
+					<input type="radio" id="ftcash" name="payment_type" 
+				value="Ftcash" <?php if(isset($post['payment_type']) && $post['payment_type'] == 'Ftcash'){echo "checked";} ?>> Ftcash
+				</div>
+			</div>
+		</div>
 		<div class="form-group col-lg-12">
 			<label for="password" class="col-lg-4">Image1</label>
 			<div class="col-lg-12 MG10">
