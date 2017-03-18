@@ -1,5 +1,13 @@
 <div class="col-lg-12">
 	<div class="col-lg-12">
+	<div class="row form-group">
+		<div class="col-lg-offset-3 col-lg-8">
+			<label>Today's Count :</label> 
+			<?php 
+				echo $todayCount;
+			?>
+		</div>
+	</div>	
 	<?php
 		if($this->session->flashdata('error') || validation_errors()){
 	?>
@@ -41,8 +49,8 @@
 			<div class="col-lg-8">
 				<select class="form-control" name="marital_status">
 				<option value="">Select Marital Status</option>
-				<option value="m" <?php if(isset($post['marital_status']) && $post['marital_status'] == 1){echo "selected";}?>>Male</option>
-				<option value="f" <?php if(isset($post['marital_status']) && $post['marital_status'] == 2){echo "selected";}?>>Female</option>
+				<option value="s" <?php if(isset($post['marital_status']) && $post['marital_status'] == 's'){echo "selected";}?>>Single</option>
+				<option value="m" <?php if(isset($post['marital_status']) && $post['marital_status'] == 'm'){echo "selected";}?>>Married</option>
 				</select>
 			</div>
 		</div>
@@ -66,7 +74,6 @@
 			<div class="col-lg-12 MG10">
 				<input type="file" name="image_3" id="image_3" class="image"/>
 			</div>			
-			</div>
 			<label for="password" class="col-lg-4 MG10">Image4</label>
 			<div class="col-lg-12 MG10">
 				<input type="file" name="image_4" id="image_4" class="image"/>
@@ -74,6 +81,7 @@
 			<label for="password" class="col-lg-4 MG10">Image5</label>
 			<div class="col-lg-12 MG10">
 				<input type="file" name="image_5" id="image_5" class="image"/>
+			</div>
 			<label for="password" class="col-lg-4 MG10">Image6</label>
 			<div class="col-lg-12 MG10">
 				<input type="file" name="image_6" id="image_6" class="image"/>

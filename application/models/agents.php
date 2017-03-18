@@ -17,13 +17,24 @@ class Agents extends CI_Model {
 		return false;
 	}
 	
-	public function uploadProduct($post,$folder){
-		$pramoterId = $this->session->userdata('id');
-		$sql = "INSERT INTO products VALUES ('','".$post['shopname']."','".$post['address']."','".$post['phonenumber']."',
-			'".$post['response']."','".$folder."',".$pramoterId.")";
+	public function uploadProduct($post,$todayCount){
+		$agentId = $this->session->userdata('id');
+		$currentTime = date('Y-m-d H:i:s');
+		$sequence = $todayCount + 1;
+		
+		$sql = "INSERT INTO products VALUES (null,'".$post['name']."','".$post['phonenumber']."','".$post['marital_status']."',
+			'".$post['email']."',1,".$sequence.", ".$agentId.", '".$currentTime."')";
 		$this->db->query($sql);
 		$affectedRows = $this->db->affected_rows();
 		return $affectedRows;
+	}
+	
+	public function getTodayCount($agentId){
+		$sql = "SELECT count(id) as totalCount FROM products where agent_id = ".$agentId." and date > '".date('Y-m-d 00:00:00')."'";
+		$query=$this->db->query($sql);
+		$result = $query->result();
+		
+		return $result[0]->totalCount;		
 	}
 	
 	public function getAllAgents(){
