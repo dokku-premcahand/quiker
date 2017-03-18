@@ -39,13 +39,14 @@ class Agent extends CI_Controller {
 	}
 	
 	public function products(){
-		/* echo "<pre>";print_r($this->session->all_userdata());exit; */
 		$agentId = $this->session->userdata('id');
 		if(isset($agentId) && !empty($agentId)){
-			$this->form_validation->set_rules('shopname','Shop Name','required');
-			$this->form_validation->set_rules('email','Email Address','required');
+			$this->load->model('agents');
+			$todayCount = $this->agents->getTodayCount($agentId);
+			$data['todayCount'] = $todayCount;
+			$this->form_validation->set_rules('name','Name','required');
 			$this->form_validation->set_rules('phonenumber','Phone Number','required|numeric');
-			$this->form_validation->set_rules('address','Address','required');
+			$this->form_validation->set_rules('marital_status','Marital Status','required');
 			
 			if($this->form_validation->run() == FALSE){
 				$data['title']='Add Product';
@@ -53,6 +54,7 @@ class Agent extends CI_Controller {
 				$data['post']=$this->input->post();
 				$this->load->view('layout.php',$data);
 			}else{
+				
 				$errors = $this->validateFiles($_FILES);
 				if($errors){
 					$data['title']='Add Product';
@@ -61,34 +63,41 @@ class Agent extends CI_Controller {
 					$this->session->set_flashdata('error',$errors);
 					$this->load->view('layout.php',$data);
 				}else{
-					$shopName = $this->input->post('shopname');
-					$time=time();
-					$folderName =$shopName.$time; 
-					mkdir('assets/uploads/'.$folderName);
-					$uploadFilePath = 'assets/uploads/'.$folderName;
+					$name = $this->input->post('name');
+					$currSeq = $todayCount + 1;
+					$agentUserName = $this->session->userdata('username');
+					
+					$folderName = 'assets/uploads/'.date('d_m_Y').'/'.$agentUserName.'/'.$currSeq;
+					
+					if (!is_dir($folderName)) {
+						mkdir($folderName, 0777, true);
+					}
+					
 					$files = $_FILES;
 					
+					$ctr = 0;
 					foreach($files as $fileData){
+						
 						if($fileData['name'] != ''){
 							$fileName="";$fileExt="";$newFileName="";
 							$fileName=pathinfo($fileData['name']);
 							$fileExt=$fileName['extension'];
 							$fileName=$fileName['filename'];
-							$microTime=microtime();
-							$newFileName=$fileName.'_'.$microTime.'.'.$fileExt;
-							move_uploaded_file($fileData['tmp_name'], $uploadFilePath.'/'.$newFileName);
+							$ctr++;
+							$newFileName=$fileName.'_'.$ctr.'.'.$fileExt;
+							move_uploaded_file($fileData['tmp_name'], $folderName.'/'.$newFileName);
 						}
 					}
 					
-					$this->load->model('agents');
-					$affectedRows = $this->agents->uploadProduct($this->input->post(),$folderName);
+					$affectedRows = $this->agents->uploadProduct($this->input->post(),$todayCount);
 					if($affectedRows > 0){
 						$data['title']='Add Product';
 						$data['view']='agent_product.php';
+						$data['todayCount'] = $currSeq;
 						$this->session->set_flashdata('success','Product added successfully.');
 						$this->load->view('layout.php',$data);
 					}else{
-						rmdir(base_url().'assets/uploads/'.$folderName);
+						rmdir(base_url().$folderName);
 						$data['title']='Add Product';
 						$data['view']='agent_product.php';
 						$this->session->set_flashdata('error','Some error has occured.Please try again.');
@@ -112,16 +121,13 @@ class Agent extends CI_Controller {
 					$type = $type[1];
 					if($type != 'jpg' && $type != 'png' && $type != 'jpeg'){
 						if(empty($error)){
-							$error='Only jpg,png and jpeg formate allowed.'; 
+							$error='Only jpg,png and jpeg formats are allowed.'; 
 						}
 					}
 				}
 			}
 		}
-		$fileCount = count($fileArr);
-		if($fileCount != 5){
-			$error= 'All images are mandatory.';
-		}
+		
 		return $error;
 	}
 	
