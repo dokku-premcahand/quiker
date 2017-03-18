@@ -1,4 +1,4 @@
-<div class="col-lg-offset-2 col-lg-8">
+<div class=" col-lg-offset-4 col-lg-4 login_content">
 	<?php
 		if($this->session->flashdata('error') || validation_errors()){
 	?>
@@ -9,25 +9,10 @@
 			<?php echo validation_errors();?>
 		</div>
 	<?php		
-		}else if($this->session->flashdata('success')){
-	?>
-		<div class="col-lg-offset-2 col-lg-8 alert alert-success">
-			<?php 
-				echo $this->session->flashdata('success');  
-				$this->session->set_flashdata('success','');
-			?>
-		</div>
-	<?php
 		}
 	?>
-	<div class="col-lg-12 center"><h3 class="MT0">Add Promoter</h3></div>
-	<form class="col-lg-offset-2 col-lg-8" action="<?php echo base_url('admin/addPramoter')?>" method="POST">
-		<div class="form-group col-lg-12">
-			<label for="Name" class="col-lg-4">Name</label>
-			<div class="col-lg-8">
-				<input type="text" class="form-control" id="name" placeholder="Name" name="name">
-			</div>
-		</div>
+	<div class="col-lg-12 center"><h3 class="MT0">Admin Login</h3></div>
+	<form class="col-lg-12" action="<?php echo base_url('admin/login')?>" method="POST">
 		<div class="form-group col-lg-12">
 			<label for="Name" class="col-lg-4">Username</label>
 			<div class="col-lg-8">

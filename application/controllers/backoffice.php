@@ -7,7 +7,7 @@ class Backoffice extends CI_Controller {
 		$action = $this->router->fetch_method();
 		if($action != "login"){
 			$session = $this->session->all_userdata();
-			if(!empty($session) && $this->session->userdata('type') != 'admin'){
+			if(!empty($session) && $this->session->userdata('type') != 'backoffice'){
 				$this->session->sess_destroy();
 				header('Location:'.base_url('user/login'));
 			}
@@ -52,41 +52,6 @@ class Backoffice extends CI_Controller {
 		echo "<pre>";print_r($this->input->post());exit;
 	}
 	
-	public function agent($affectedRows=0){
-		$agents = $this->agents->getAllagents();
-		if($affectedRows > 0){
-			$this->session->set_flashdata('success','Promoter status changed successfully.');
-		}
-		$data['title']='Agents Listing';
-		$data['view']='agent.php';
-		$data['userData']=$agents;
-		$this->load->view('backoffice/layout.php',$data);
-	}
-	
-	public function addAgent(){
-		$this->form_validation->set_rules('name','Name','required');
-		$this->form_validation->set_rules('username','Username','required');
-		$this->form_validation->set_rules('password','Password','required');
-		
-		if($this->form_validation->run() == FALSE){
-			$data['title']='Add Agents';
-			$data['view']='add_agent.php';
-			$this->load->view('backoffice/layout.php',$data);
-		}else{
-			$addRows=$this->agents->addAgent($this->input->post());
-			if($addRows == 1){
-				$this->session->set_flashdata('success','Promoter added successfully.');
-			}else if($addRows == 2){
-				$this->session->set_flashdata('error','Username already exists.');
-			}else{
-				$this->session->set_flashdata('error','Unable to add promoter.Please try again.');
-			}
-			$data['title']='Add Agents';
-			$data['view']='add_agent.php';
-			$this->load->view('backoffice/layout.php',$data);
-		}
-	}
-	
 	public function product(){
 		$this->load->model('products');
 		$product = $this->products->getAllProducts();
@@ -95,12 +60,6 @@ class Backoffice extends CI_Controller {
 		$data['view']='product.php';
 		$data['userData']=$product;
 		$this->load->view('backoffice/layout.php',$data);
-	}
-	
-	public function changeStatus($agentId,$status){
-		$affectedRows = $this->agents->changeStatus($agentId,$status);
-		
-		header('Location:'.base_url('backoffice/agent/'.$affectedRows));
 	}
 	
 	public function downloadProduct($folder){
