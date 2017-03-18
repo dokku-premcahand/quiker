@@ -60,15 +60,23 @@ class Agent extends CI_Controller {
 		}
 	}
 	
-	public function products(){
+	public function products($startDay = ''){
 		$agentId = $this->session->userdata('id');
 		if(isset($agentId) && !empty($agentId)){
 			$this->load->model('agents');
-			$todayCount = $this->agents->getTodayCount($agentId);
+			if($startDay == 'start_day'){
+				$data['startDay'] = $this->agents->setStartDay($agentId);
+				header('Location:'.base_url('agent/products'));
+			}
+			
+			$todayCount = $this->agents->getTodayCount($agentId);			
 			$data['todayCount'] = $todayCount;
+			$data['startDay'] = $this->agents->getStartDay($agentId);
+			
 			$this->form_validation->set_rules('name','Name','required');
 			$this->form_validation->set_rules('phonenumber','Phone Number','required|numeric');
 			$this->form_validation->set_rules('marital_status','Marital Status','required');
+			$this->form_validation->set_rules('payment_type','Type','required');
 			
 			if($this->form_validation->run() == FALSE){
 				$data['title']='Add Product';
