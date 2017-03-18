@@ -40,7 +40,7 @@ class Agents extends CI_Model {
 		return $affectedRows;
 	}
 	
-	public function addAgents($post){
+	public function addAgent($post){
 		$sql = "SELECT * FROM agents WHERE username LIKE '%".$post['username']."%'";
 		$query = $this->db->query($sql);
 		$result = $query->result();
