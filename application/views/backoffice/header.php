@@ -29,11 +29,6 @@
 				</div>
 
 				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-					<!-- <ul class="nav navbar-nav">
-						<li><a href="<?php echo base_url('admin/product');?>">Products Listing</a></li>
-						<li><a href="<?php echo base_url('admin/pramoter');?>">Promoters Listing</a></li>
-						<li><a href="<?php echo base_url('admin/addPramoter');?>">Add Promoters</a></li>
-					</ul> -->
 					<ul class="nav navbar-nav navbar-right">
 						<li><a href="<?php echo base_url('backoffice/logout') ?>">Logout</a></li>
 					</ul>
