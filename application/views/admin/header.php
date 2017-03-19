@@ -7,6 +7,7 @@
 <head>
 <title><?php echo $title?></title>
 <link href="<?php echo base_url('assets/css/bootstrap.css');?>" type="text/css" rel="stylesheet"/>
+<link href="<?php echo base_url('assets/css/jquery-ui.css');?>" type="text/css" rel="stylesheet">
 <link href="<?php echo base_url('assets/css/main.css');?>" type="text/css" rel="stylesheet"/>
 <link href="<?php echo base_url('assets/css/jquery.dataTables.css');?>" type="text/css" rel="stylesheet"/>
 <?php
@@ -30,7 +31,7 @@
 
 				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 					<ul class="nav navbar-nav">
-						<li><a href="<?php echo base_url('admin/product');?>">Products Listing</a></li>
+						<!-- <li><a href="<?php echo base_url('admin/product');?>">Products Listing</a></li> -->
 						<li><a href="<?php echo base_url('admin/agent');?>">Agents Listing</a></li>
 						<li><a href="<?php echo base_url('admin/startDayAgents');?>">Agents Start Day Listing</a></li>
 						<li><a href="<?php echo base_url('admin/addAgent');?>">Add Agent</a></li>

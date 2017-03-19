@@ -130,11 +130,12 @@ class Backoffice extends CI_Controller {
 				// Write the file
 				$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $fileType);
 				$objWriter->save($fileName);
-				//Force Download
-				header('Content-Type: application/octet-stream');
-				header("Content-Transfer-Encoding: Binary"); 
-				header("Content-disposition: attachment; filename=\"".basename($fileName)."\""); 
-				readfile($fileName);
+				//Force Download the generated excel.
+				// header('Content-Type: application/octet-stream');
+				// header("Content-Transfer-Encoding: Binary"); 
+				// header("Content-disposition: attachment; filename=\"".basename($fileName)."\""); 
+				// readfile($fileName);
+				$this->downloadProduct($this->input->post('fromDate'),$this->input->post('toDate'));
 			}else{
 				header('Location:'.base_url('backoffice/product'));
 			}
@@ -144,47 +145,44 @@ class Backoffice extends CI_Controller {
 	//Used to export all the products with out any date filter.
 	public function exportAll(){
 		$this->load->model('products');
-		// $product['data'] = $this->products->getAllProducts();
+		$product['data'] = $this->products->getAllProducts();
 
-		// //Loading PHPExcel Library
-		// $this->load->library('Excel');
-		// $fileName = './assets/docs/product_listing.xlsx';
-		// $fileType = PHPExcel_IOFactory::identify($fileName);
+		//Loading PHPExcel Library
+		$this->load->library('Excel');
+		$fileName = './assets/docs/product_listing.xlsx';
+		$fileType = PHPExcel_IOFactory::identify($fileName);
 
-		// // Read the file
-		// $objReader = PHPExcel_IOFactory::createReader($fileType);
-		// $objPHPExcel = $objReader->load($fileName);
-		// $objPHPExcel->disconnectWorksheets();
-		// $objPHPExcel->createSheet();
-		// $objPHPExcel->getActiveSheet()->setTitle("Product Listing");
+		// Read the file
+		$objReader = PHPExcel_IOFactory::createReader($fileType);
+		$objPHPExcel = $objReader->load($fileName);
+		$objPHPExcel->disconnectWorksheets();
+		$objPHPExcel->createSheet();
+		$objPHPExcel->getActiveSheet()->setTitle("Product Listing");
 
-		// // Inserting Data
-		// $objPHPExcel->setActiveSheetIndex(0)
-		// 	->setCellValue('A1', 'Name')
-		// 	->setCellValue('B1', 'Phone Number')
-		// 	->setCellValue('C1', 'Marital Status')
-		// 	->setCellValue('D1', 'Email')
-		// 	->setCellValue('E1', 'Agent Name');
-		// $cnt = 2;
-		// foreach($product['data'] as $tempData){
-		// 	$objPHPExcel->setActiveSheetIndex(0)
-		// 	->setCellValue('A'.$cnt, $tempData->name)
-		// 	->setCellValue('B'.$cnt, $tempData->phone_number)
-		// 	->setCellValue('C'.$cnt, $tempData->marital_status)
-		// 	->setCellValue('D'.$cnt, $tempData->email)
-		// 	->setCellValue('E'.$cnt, $tempData->pramoterName);
-		// 	$cnt++;
-		// }
+		// Inserting Data
+		$objPHPExcel->setActiveSheetIndex(0)
+			->setCellValue('A1', 'Name')
+			->setCellValue('B1', 'Phone Number')
+			->setCellValue('C1', 'Marital Status')
+			->setCellValue('D1', 'Email')
+			->setCellValue('E1', 'Agent Name')
+			->setCellValue('F1', 'Date');
+		$cnt = 2;
+		foreach($product['data'] as $tempData){
+			$objPHPExcel->setActiveSheetIndex(0)
+			->setCellValue('A'.$cnt, $tempData->name)
+			->setCellValue('B'.$cnt, $tempData->phone_number)
+			->setCellValue('C'.$cnt, $tempData->marital_status)
+			->setCellValue('D'.$cnt, $tempData->email)
+			->setCellValue('E'.$cnt, $tempData->pramoterName)
+			->setCellValue('E'.$cnt, $tempData->date);
+			$cnt++;
+		}
 
-		// // Write the file
-		// $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $fileType);
-		// $objWriter->save($fileName);
-		// //Force Download
-		// header('Content-Type: application/octet-stream');
-		// header("Content-Transfer-Encoding: Binary"); 
-		// header("Content-disposition: attachment; filename=\"".basename($fileName)."\""); 
-		// readfile($fileName);
-		$this->downloadProduct();
+		// Write the file
+		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $fileType);
+		$objWriter->save($fileName);
+		// $this->downloadProduct();
 	}
 	
 	//Used get the complete listing of products.
@@ -211,11 +209,11 @@ class Backoffice extends CI_Controller {
 	}
 	
 	//Used to export the images upload by agent.
-	public function downloadProduct(){
+	public function downloadProduct($fromDate,$toDate){
 		$this->load->helper('directory');
 		$this->load->library('zip');
-		$dates = $this->products->getMaxMinDates();
-		$agents = $this->products->getUniqueAgents();
+		$dates = $this->products->generateDateRange($fromDate,$toDate);
+		$agents = $this->products->getUniqueAgents($fromDate,$toDate);
 		
 		foreach($dates as $date){
 			$fromPath = 'assets/uploads/'.$date;
@@ -244,17 +242,36 @@ class Backoffice extends CI_Controller {
 			}
 		}
 
+		copy('./assets/docs/product_listing.xlsx','./assets/imagesZip/product_listing.xlsx');
 		$path = 'assets/imagesZip';
 		$this->zip->read_dir($path,FALSE);
 
-		//Not working will have to delete each file individually. Can use above foreach loop.
-		// foreach($dates as $date){
-		// 	$toPath = 'assets/imagesZip/'.$date.'/';
-		// 	if(file_exists($toPath)){
-		// 		rmdir($toPath);
-		// 	}
-		// }
-		$this->zip->download('Images.zip');
+		unlink('./assets/imagesZip/product_listing.xlsx');
+		foreach($dates as $date){
+			$toPath = 'assets/imagesZip/'.$date;
+			if(file_exists($toPath)){
+				foreach($agents as $agent){
+					if(file_exists($toPath.'/'.$agent)){
+						$sequences = $this->products->getAgentSeq($agent);
+						foreach($sequences as $sequence){
+							if(file_exists($toPath.'/'.$agent.'/'.$sequence)){
+								$folderData = scandir($toPath.'/'.$agent.'/'.$sequence);
+								foreach ($folderData as  $file) {
+									if(strlen($file) > 2){
+										$toFilePath = $toPath.'/'.$agent.'/'.$sequence.'/'.$file;
+										unlink($toFilePath);
+									}
+								}
+								rmdir($toPath.'/'.$agent.'/'.$sequence);
+							}
+						}
+						rmdir($toPath.'/'.$agent);
+					}
+				}
+				rmdir($toPath);
+			}
+		}
+		$this->zip->download('Export.zip');
 	}
 
 	//Used to change the product status

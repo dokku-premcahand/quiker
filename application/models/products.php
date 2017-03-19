@@ -49,7 +49,8 @@ class Products extends CI_Model {
 	}
 
 	public function getUniqueAgents(){
-		$sql = "SELECT distinct ag.username FROM products pd LEFT JOIN agents ag ON ag.id = pd.agent_id WHERE flag <> 1";
+		$sql = "SELECT distinct ag.username FROM products pd LEFT JOIN agents ag ON ag.id = pd.agent_id 
+		WHERE pd.date BETWEEN '".$post['fromDate']."' AND '".$post['toDate']."'";
 		$query=$this->db->query($sql);
 		$resultData=$query->result();
 		$usernameArray = array();

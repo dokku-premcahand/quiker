@@ -98,7 +98,19 @@ class Agents extends CI_Model {
 	}
 
 	public function getAgentStartDay(){
-		$sql = "SELECT ag.id,ag.name,ag.username,sd.start_date_time FROM agents ag LEFT JOIN start_day sd ON ag.id = sd.agent_id";
+		$todaysDate = date('Y-m-d').' 00:00:00';
+		$sql = "SELECT ag.id,ag.name,ag.username,sd.start_date_time FROM agents ag 
+				LEFT JOIN start_day sd ON ag.id = sd.agent_id
+				WHERE start_date_time >= '".$todaysDate."'";
+		$query = $this->db->query($sql);
+		$result = $query->result();
+		return $result;
+	}
+
+	public function dateAgentSeach($post){
+		$sql = "SELECT ag.name,DATE_FORMAT(sd.start_date_time,'%d-%m-%Y') as date, DATE_FORMAT(sd.start_date_time,'%h:%i %p')
+				as time FROM agents ag LEFT JOIN start_day sd ON ag.id = sd.agent_id
+				WHERE start_date_time >= '".$post['fromDate']."' AND start_date_time <= '".$post['toDate']."'";
 		$query = $this->db->query($sql);
 		$result = $query->result();
 		return $result;

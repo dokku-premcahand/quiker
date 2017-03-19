@@ -45,7 +45,7 @@ class Admin extends CI_Controller {
 	}
 
 	public function agent($affectedRows=0){
-		$agents = $this->agents->getAllagents();
+		$agents['data'] = $this->agents->getAllagents();
 		if($affectedRows > 0){
 			$this->session->set_flashdata('success','Promoter status changed successfully.');
 		}
@@ -84,6 +84,58 @@ class Admin extends CI_Controller {
 		
 		header('Location:'.base_url('admin/agent/'.$affectedRows));
 	}
+
+	public function exportAgent(){
+		$this->form_validation->set_rules('fromDate', 'From Date', 'required');
+		$this->form_validation->set_rules('toDate', 'To Date', 'required');
+
+		if($this->form_validation->run() == FALSE){
+			$agentData['data'] = $this->agents->getAgentStartDay();
+
+			$data['title']='Agent Start Day Listing';
+			$data['view']='agent_start_day.php';
+			$data['userData']=$agentData;
+			$this->load->view('admin/layout.php',$data);
+		}else{
+			$agent['data'] = $this->agents->dateAgentSeach($this->input->post());
+			$agent['post'] = $this->input->post();
+
+			//Loading PHPExcel Library
+			$this->load->library('Excel');
+			$fileName = './assets/docs/agent_listing.xlsx';
+			$fileType = PHPExcel_IOFactory::identify($fileName);
+
+			// Read the file
+			$objReader = PHPExcel_IOFactory::createReader($fileType);
+			$objPHPExcel = $objReader->load($fileName);
+			$objPHPExcel->disconnectWorksheets();
+			$objPHPExcel->createSheet();
+			$objPHPExcel->getActiveSheet()->setTitle("Agent Start Day Listing");
+
+			// Inserting Data
+			$objPHPExcel->setActiveSheetIndex(0)
+				->setCellValue('A1', 'Date')
+				->setCellValue('B1', 'Name')
+				->setCellValue('C1', 'Start Time');
+			$cnt = 2;
+			foreach($agent['data'] as $tempData){
+				$objPHPExcel->setActiveSheetIndex(0)
+				->setCellValue('A'.$cnt, $tempData->date)
+				->setCellValue('B'.$cnt, $tempData->name)
+				->setCellValue('C'.$cnt, $tempData->time);
+				$cnt++;
+			}
+
+			// Write the file
+			$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $fileType);
+			$objWriter->save($fileName);
+			//Force Download
+			header('Content-Type: application/octet-stream');
+			header("Content-Transfer-Encoding: Binary"); 
+			header("Content-disposition: attachment; filename=\"".basename($fileName)."\""); 
+			readfile($fileName);
+		}
+	}
 	
 	//Used get the complete listing of products.
 	public function product(){
@@ -94,32 +146,6 @@ class Admin extends CI_Controller {
 		$data['view']='product.php';
 		$data['userData']=$product;
 		$this->load->view('admin/layout.php',$data);
-	}
-
-	public function searchProduct(){
-		$this->form_validation->set_rules('fromDate', 'From Date', 'required');
-		$this->form_validation->set_rules('toDate', 'To Date', 'required');
-		$this->load->model('products');
-
-		if($this->form_validation->run() == FALSE){
-			$product['data'] = $this->products->getAllProducts();
-			
-			$data['title']='Product Listing';
-			$data['view']='product.php';
-			$data['userData']=$product;
-			$this->load->view('admin/layout.php',$data);
-		}else{
-			if($this->input->post()){
-				$product['data'] = $this->products->dateSeach($this->input->post());
-				$product['post'] = $this->input->post();
-				$data['title']='Product Listing';
-				$data['view']='product.php';
-				$data['userData']=$product;
-				$this->load->view('admin/layout.php',$data);
-			}else{
-				header('Location:'.base_url('admin/product'));
-			}
-		}
 	}
 
 	public function export(){
@@ -184,54 +210,9 @@ class Admin extends CI_Controller {
 		}
 	}
 
-	public function exportAll(){
-		$this->load->model('products');
-		$product['data'] = $this->products->getAllProducts();
-
-		//Loading PHPExcel Library
-				$this->load->library('Excel');
-				$fileName = './assets/docs/product_listing.xlsx';
-				$fileType = PHPExcel_IOFactory::identify($fileName);
-
-				// Read the file
-				$objReader = PHPExcel_IOFactory::createReader($fileType);
-				$objPHPExcel = $objReader->load($fileName);
-				$objPHPExcel->disconnectWorksheets();
-				$objPHPExcel->createSheet();
-				$objPHPExcel->getActiveSheet()->setTitle("Product Listing");
-
-				// Inserting Data
-				$objPHPExcel->setActiveSheetIndex(0)
-					->setCellValue('A1', 'Name')
-					->setCellValue('B1', 'Phone Number')
-					->setCellValue('C1', 'Marital Status')
-					->setCellValue('D1', 'Email')
-					->setCellValue('E1', 'Agent Name');
-				$cnt = 2;
-				foreach($product['data'] as $tempData){
-					$objPHPExcel->setActiveSheetIndex(0)
-					->setCellValue('A'.$cnt, $tempData->name)
-					->setCellValue('B'.$cnt, $tempData->phone_number)
-					->setCellValue('C'.$cnt, $tempData->marital_status)
-					->setCellValue('D'.$cnt, $tempData->email)
-					->setCellValue('E'.$cnt, $tempData->pramoterName);
-					$cnt++;
-				}
-
-				// Write the file
-				$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $fileType);
-				$objWriter->save($fileName);
-				//Force Download
-				header('Content-Type: application/octet-stream');
-				header("Content-Transfer-Encoding: Binary"); 
-				header("Content-disposition: attachment; filename=\"".basename($fileName)."\""); 
-				readfile($fileName);
-	}
-
 	//Used to get agent start day listing.
 	public function startDayAgents(){
-		$this->load->model('agents');
-		$agentData = $this->agents->getAgentStartDay();
+		$agentData['data'] = $this->agents->getAgentStartDay();
 
 		$data['title']='Agent Start Day Listing';
 		$data['view']='agent_start_day.php';

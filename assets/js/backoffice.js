@@ -50,6 +50,6 @@ $(document).ready(function(){
             	}
             }
         });
-		setTimeout(function(){message();}, 60000);
+		setTimeout(function(){message();}, 10000);
 	}
 });
