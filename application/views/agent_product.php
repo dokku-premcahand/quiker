@@ -59,8 +59,8 @@
 			<div class="col-lg-8">
 				<select class="form-control" name="marital_status">
 				<option value="">Select Marital Status</option>
-				<option value="s" <?php if(isset($post['marital_status']) && $post['marital_status'] == 's'){echo "selected";}?>>Single</option>
-				<option value="m" <?php if(isset($post['marital_status']) && $post['marital_status'] == 'm'){echo "selected";}?>>Married</option>
+				<option value="Single" <?php if(isset($post['marital_status']) && $post['marital_status'] == 'Single'){echo "selected";}?>>Single</option>
+				<option value="Married" <?php if(isset($post['marital_status']) && $post['marital_status'] == 'Married'){echo "selected";}?>>Married</option>
 				</select>
 			</div>
 		</div>

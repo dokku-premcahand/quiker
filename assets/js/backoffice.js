@@ -4,7 +4,13 @@ $(document).ready(function(){
 	});
 
 	$("#markAsDone").click(function(){
-		$("#changeProductStatus").submit();
+		if($("input[name='product[]']").is(":checked")){
+			$("#changeProductStatus").submit();			
+		}
+		else{
+			alert("Please select the entries to mark done");
+			return false;
+		}
 	});
 
 	$("#pullSearchData").click(function(){
@@ -23,22 +29,27 @@ $(document).ready(function(){
             success:function(data){
             	if(data != 1){
 					var html="";
+					var id;
 					for(var cnt in data){
-						console.log(data[cnt]['id']);
-						html += "<tr class='success'><td>"+data[cnt]['id']+"</td>";
+						//console.log(data[cnt]['id']);
+						id = data[cnt]['id'];
+						html += "<tr class='success'><td>"+data[cnt]['sequence']+"</td>";
 						html += "<td>"+data[cnt]['name']+"</td>";
 						html += "<td>"+data[cnt]['phone_number']+"</td>";
 						html += "<td>"+data[cnt]['marital_status']+"</td>";
+						html += "<td>"+data[cnt]['payment_type']+"</td>";
 						html += "<td>"+data[cnt]['email']+"</td>";
 						html += "<td>"+data[cnt]['pramoterName']+"</td>";
+						html += "<td>"+data[cnt]['date']+"</td>";
 						html += "<td><input type='checkbox' name=product[]' id='product_"+data[cnt]['id']+"' value='"+data[cnt]['id']+"'></td></tr>";
 					}
 					$("#productTable").children('tbody').append(html);
+					$("#latestProductId").val(id);
 					var sound = document.getElementById('myAudio');
 					sound.play();
             	}
             }
         });
-		setTimeout(function(){message();}, 30000);
+		setTimeout(function(){message();}, 60000);
 	}
 });

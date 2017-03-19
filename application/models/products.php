@@ -11,7 +11,7 @@ class Products extends CI_Model {
 	}
 
 	public function updateProductStatus($productStr){
-		$sql = "UPDATE products SET flag = 1 WHERE id IN('".$productStr."')";
+		$sql = "UPDATE products SET flag = 1 WHERE id IN(".$productStr.")";
 		$this->db->query($sql);
 		return $this->db->affected_rows();
 	}
@@ -19,9 +19,9 @@ class Products extends CI_Model {
 	public function dateSeach($post){
 		$sql = "SELECT pd.*,pr.name as pramoterName FROM products pd 
 			JOIN agents pr ON pr.id=pd.agent_id 
-			WHERE pd.flag <> 1 and pd.date BETWEEN '".$post['fromDate']."' AND '".$post['toDate']."'
+			WHERE pd.date BETWEEN '".$post['fromDate']."' AND '".$post['toDate']."'
 			ORDER BY pd.date";
-		// echo $sql;exit;
+			
 		$query=$this->db->query($sql);
 		$resultData=$query->result();
 		return $resultData;

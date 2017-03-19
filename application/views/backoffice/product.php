@@ -27,7 +27,7 @@
 			      		value="<?php echo (!empty($newData['post']['toDate'])) ? $newData['post']['toDate'] : ""; ?>">
 					</div>
 					<div class="col-sm-4" style="text-align: right;">
-						<button type="submit" class="btn btn-sm btn-primary">Search</button>
+						<!-- <button type="submit" class="btn btn-sm btn-primary">Search</button> -->
 						<button type="button" class="btn btn-sm btn-success" id="pullSearchData">Pull</button>
 					</div>
 				</div>
@@ -50,12 +50,14 @@
 		<table class="table table-bordered" id="productTable">
 			<thead>
 				<tr>
-					<td>Id</td>
+					<td>Sequence</td>
 					<td>Name</td>
 					<td>Phone Number</td>
 					<td>Marital Status</td>
+					<td>Type</td>
 					<td>Email</td>
 					<td>Agent Name</td>
+					<td>Date</td>
 					<td>Action</td>
 				</tr>
 			</thead>
@@ -65,19 +67,20 @@
 					foreach($newData['data'] as $productData){
 				?>
 					<tr>
-						<td><?php echo $productData->id; ?></td>
+						<td><?php echo $productData->sequence; ?></td>
 						<td><?php echo $productData->name; ?></td>
 						<td><?php echo $productData->phone_number; ?></td>
 						<td><?php echo $productData->marital_status; ?></td>
+						<td><?php echo $productData->payment_type; ?></td>
 						<td><?php echo $productData->email; ?></td>
 						<td><?php echo $productData->pramoterName; ?></td>
+						<td><?php echo $productData->date; ?></td>
 						<td>
 							<input type="checkbox" name="product[]" id="product_<?php echo $productData->id;?>" value="<?php echo $productData->id;?>"/>
 						</td>
 					</tr>
 				<?php
 					$latestProductId = $productData->id;
-					// $latestProductId = 19;
 					}
 				}else{
 				?>

@@ -53,7 +53,7 @@ class Agents extends CI_Model {
 		$sequence = $todayCount + 1;
 		
 		$sql = "INSERT INTO products VALUES (null,'".$post['name']."','".$post['phonenumber']."','".$post['marital_status']."', '".$post['payment_type']."',
-			'".$post['email']."',1,".$sequence.", ".$agentId.", '".$currentTime."')";
+			'".$post['email']."',0,".$sequence.", ".$agentId.", '".$currentTime."')";
 		$this->db->query($sql);
 		$affectedRows = $this->db->affected_rows();
 		return $affectedRows;

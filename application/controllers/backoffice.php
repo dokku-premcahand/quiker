@@ -105,19 +105,25 @@ class Backoffice extends CI_Controller {
 
 				// Inserting Data
 				$objPHPExcel->setActiveSheetIndex(0)
-					->setCellValue('A1', 'Name')
-					->setCellValue('B1', 'Phone Number')
-					->setCellValue('C1', 'Marital Status')
-					->setCellValue('D1', 'Email')
-					->setCellValue('E1', 'Agent Name');
+					->setCellValue('A1', 'Sequence')
+					->setCellValue('B1', 'Name')
+					->setCellValue('C1', 'Phone Number')
+					->setCellValue('D1', 'Marital Status')
+					->setCellValue('E1', 'Type')
+					->setCellValue('F1', 'Email')
+					->setCellValue('G1', 'Agent Name')
+					->setCellValue('H1', 'Date');
 				$cnt = 2;
 				foreach($product['data'] as $tempData){
 					$objPHPExcel->setActiveSheetIndex(0)
-					->setCellValue('A'.$cnt, $tempData->name)
-					->setCellValue('B'.$cnt, $tempData->phone_number)
-					->setCellValue('C'.$cnt, $tempData->marital_status)
-					->setCellValue('D'.$cnt, $tempData->email)
-					->setCellValue('E'.$cnt, $tempData->pramoterName);
+					->setCellValue('A'.$cnt, $tempData->sequence)
+					->setCellValue('B'.$cnt, $tempData->name)
+					->setCellValue('C'.$cnt, $tempData->phone_number)
+					->setCellValue('D'.$cnt, $tempData->marital_status)
+					->setCellValue('E'.$cnt, $tempData->payment_type)
+					->setCellValue('F'.$cnt, $tempData->email)
+					->setCellValue('G'.$cnt, $tempData->pramoterName)
+					->setCellValue('H'.$cnt, $tempData->date);
 					$cnt++;
 				}
 
@@ -254,7 +260,7 @@ class Backoffice extends CI_Controller {
 	//Used to change the product status
 	public function changeProductStatus(){
 		$productArr = $this->input->post('product');
-		$productStr = implode($productArr,',');
+		$productStr = @implode($productArr,',');
 		$this->load->model('products');
 		$product = $this->products->updateProductStatus($productStr);
 		if($product > 0){
