@@ -241,7 +241,7 @@ class Backoffice extends CI_Controller {
 				}
 			}
 		}
-
+		//To Do :-Check if images actually exists then only add images to zip
 		copy('./assets/docs/product_listing.xlsx','./assets/imagesZip/product_listing.xlsx');
 		$path = 'assets/imagesZip';
 		$this->zip->read_dir($path,FALSE);
