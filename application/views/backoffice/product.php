@@ -38,7 +38,7 @@
 				<div class="form-group">
 					<div class="col-sm-offset-8 col-sm-4" style="text-align: right;">
 						<button type="button" class="btn btn-sm btn-danger" id="markAsDone">Mark As Done</button>
-						<button type="submit" class="btn btn-sm btn-danger">Export</button>
+						<button type="button" class="btn btn-sm btn-danger" id="exportSelected">Export</button>
 					</div>
 				</div>
 				<input type="hidden" name="productIds" id="productsIds" value=""/>

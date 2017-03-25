@@ -74,7 +74,7 @@ class Products extends CI_Model {
 	}
 
 	//Will return date range between 2 dates.
-	function generateDateRange($strDateFrom,$strDateTo)
+	private function generateDateRange($strDateFrom,$strDateTo)
 	{
 		$begin = new DateTime($strDateFrom);
 		$end = new DateTime($strDateTo);
@@ -86,5 +86,39 @@ class Products extends CI_Model {
 			$dateArray[] = $date->format("d_m_Y");
 		}
 		return $dateArray;
+	}
+
+	public function exportSelected($post){
+		$productStr = @implode($post['product'],',');
+
+		$sql="SELECT pd.*,pr.name as pramoterName FROM products pd 
+			JOIN agents pr ON pr.id=pd.agent_id 
+			WHERE pd.id IN (".$productStr.")
+			ORDER BY pd.date";
+		$query=$this->db->query($sql);
+		$resultData=$query->result();
+		return $resultData;
+	}
+
+	public function generateDateRangeSelected($products){
+		$sql = "SELECT max(date) AS maxDate, min(date) AS minDate FROM products WHERE id IN (".$products.")";
+		$query=$this->db->query($sql);
+		$resultData=$query->result();
+		$data['maxDate'] = substr($resultData[0]->maxDate, 0, 10);
+		$data['minDate'] = substr($resultData[0]->minDate, 0, 10);
+		$dateRange = $this->generateDateRange($data['minDate'],$data['maxDate']);
+		return $dateRange;
+	}
+
+	public function getUniqueAgentsSelected($products){
+		$sql = "SELECT distinct ag.username FROM products pd LEFT JOIN agents ag ON ag.id = pd.agent_id 
+		WHERE pd.id IN (".$products.")";
+		$query=$this->db->query($sql);
+		$resultData=$query->result();
+		$usernameArray = array();
+		foreach($resultData as $data){
+			$usernameArray[] = $data->username;
+		}
+		return $usernameArray;
 	}
 }

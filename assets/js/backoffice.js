@@ -13,6 +13,17 @@ $(document).ready(function(){
 		}
 	});
 
+	$("#exportSelected").click(function(){
+		if($("input[name='product[]']").is(":checked")){
+			$("#changeProductStatus").attr("action",baseURL+"backoffice/exportSelected");
+			$("#changeProductStatus").submit();
+		}
+		else{
+			alert("Please select the entries to Export");
+			return false;
+		}
+	});
+
 	$("#pullSearchData").click(function(){
 		$("#searchForm").attr("action",baseURL+"backoffice/export");
 		$("#searchForm").submit();

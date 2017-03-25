@@ -143,10 +143,10 @@ class Backoffice extends CI_Controller {
 	}
 
 	//Used to export all the products with out any date filter.
-	public function exportAll(){
+	public function exportSelected(){
 		$this->load->model('products');
-		$product['data'] = $this->products->getAllProducts();
-
+		$product['data'] = $this->products->exportSelected($this->input->post());
+		
 		//Loading PHPExcel Library
 		$this->load->library('Excel');
 		$fileName = './assets/docs/product_listing.xlsx';
@@ -182,7 +182,7 @@ class Backoffice extends CI_Controller {
 		// Write the file
 		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $fileType);
 		$objWriter->save($fileName);
-		// $this->downloadProduct();
+		$this->downloadProductSelected($this->input->post());
 	}
 	
 	//Used get the complete listing of products.
@@ -272,6 +272,72 @@ class Backoffice extends CI_Controller {
 			}
 		}
 		$this->zip->download('Export.zip');
+	}
+
+	public function downloadProductSelected($post){
+		$this->load->helper('directory');
+		$this->load->library('zip');
+		$productStr = @implode($post['product'],',');
+		$dates = $this->products->generateDateRangeSelected($productStr);
+		$agents = $this->products->getUniqueAgentsSelected($productStr);
+		// echo "<pre>";print_r($dates);exit;
+		foreach($dates as $date){
+			$fromPath = 'assets/uploads/'.$date;
+			$toPath = 'assets/imagesZip/'.$date;
+			if(file_exists($fromPath)){
+				foreach($agents as $agent){
+					if(file_exists($fromPath.'/'.$agent)){
+						$sequences = $this->products->getAgentSeq($agent);
+						foreach($sequences as $sequence){
+							if(file_exists($fromPath.'/'.$agent.'/'.$sequence)){
+								$folderData = scandir($fromPath.'/'.$agent.'/'.$sequence);
+								mkdir($toPath,0777);
+								mkdir($toPath.'/'.$agent,0777);
+								mkdir($toPath.'/'.$agent.'/'.$sequence,0777);
+								foreach ($folderData as  $file) {
+									if(strlen($file) > 2){
+										$fromFilePath = $fromPath.'/'.$agent.'/'.$sequence.'/'.$file;
+										$toFilePath = $toPath.'/'.$agent.'/'.$sequence.'/'.$file;
+										copy($fromFilePath,$toFilePath);
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		//To Do :-Check if images actually exists then only add images to zip
+		copy('./assets/docs/product_listing.xlsx','./assets/imagesZip/product_listing.xlsx');
+		$path = 'assets/imagesZip';
+		$this->zip->read_dir($path,FALSE);
+
+		unlink('./assets/imagesZip/product_listing.xlsx');
+		foreach($dates as $date){
+			$toPath = 'assets/imagesZip/'.$date;
+			if(file_exists($toPath)){
+				foreach($agents as $agent){
+					if(file_exists($toPath.'/'.$agent)){
+						$sequences = $this->products->getAgentSeq($agent);
+						foreach($sequences as $sequence){
+							if(file_exists($toPath.'/'.$agent.'/'.$sequence)){
+								$folderData = scandir($toPath.'/'.$agent.'/'.$sequence);
+								foreach ($folderData as  $file) {
+									if(strlen($file) > 2){
+										$toFilePath = $toPath.'/'.$agent.'/'.$sequence.'/'.$file;
+										unlink($toFilePath);
+									}
+								}
+								rmdir($toPath.'/'.$agent.'/'.$sequence);
+							}
+						}
+						rmdir($toPath.'/'.$agent);
+					}
+				}
+				rmdir($toPath);
+			}
+		}
+		$this->zip->download('ExportSelected.zip');
 	}
 
 	//Used to change the product status
