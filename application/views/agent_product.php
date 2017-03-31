@@ -85,6 +85,54 @@
 			</div>
 		</div>
 		<div class="form-group col-lg-12">
+			<label for="Name" class="col-lg-4">Aadhar No.</label>
+			<div class="col-lg-8">
+				<input type="text" class="form-control" id="aadhar" placeholder="Aadhar No." name="aadhar" 
+				value="<?php if(isset($post['aadhar']) && !empty($post['aadhar'])){echo $post['aadhar'];} ?>">
+			</div>
+		</div>
+		<div class="form-group col-lg-12">
+			<label for="Name" class="col-lg-4">Father Name</label>
+			<div class="col-lg-8">
+				<input type="text" class="form-control" id="father_name" placeholder="Father Name" name="father_name" 
+				value="<?php if(isset($post['father_name']) && !empty($post['father_name'])){echo $post['father_name'];} ?>">
+			</div>
+		</div>
+		<div class="form-group col-lg-12">
+			<label for="Name" class="col-lg-4">Father Age</label>
+			<div class="col-lg-8">
+				<input type="text" class="form-control" id="aadhar" placeholder="Father Age" name="father_age" 
+				value="<?php if(isset($post['father_age']) && !empty($post['father_age'])){echo $post['father_age'];} ?>">
+			</div>
+		</div>
+		<div class="form-group col-lg-12">
+			<label for="Name" class="col-lg-4">Caste</label>
+			<div class="col-lg-8">
+				<input type="text" class="form-control" id="aadhar" placeholder="Caste" name="caste" 
+				value="<?php if(isset($post['caste']) && !empty($post['caste'])){echo $post['caste'];} ?>">
+			</div>
+		</div>
+		<div class="form-group col-lg-12">
+			<label for="payment_type" class="col-lg-4">House Type</label>
+			<div class="col-lg-8">
+				<div class="col-lg-6">
+					<input type="radio" id="rent" name="house_type" 
+				value="rent" checked> Rent
+				</div>
+				<div class="col-lg-6">
+					<input type="radio" id="owned" name="house_type" 
+				value="Ftcash" <?php if(isset($post['house_type']) && $post['house_type'] == 'owned'){echo "checked";} ?>> Owned
+				</div>
+			</div>
+		</div>
+		<div class="form-group col-lg-12">
+			<label for="Name" class="col-lg-4">Salary</label>
+			<div class="col-lg-8">
+				<input type="text" class="form-control" id="salary" placeholder="Salary" name="salary" 
+				value="<?php if(isset($post['salary']) && !empty($post['salary'])){echo $post['salary'];} ?>">
+			</div>
+		</div>
+		<div class="form-group col-lg-12">
 			<label for="password" class="col-lg-4">Image1</label>
 			<div class="col-lg-12 MG10">
 				<input type="file" name="image_1" id="image_1" class="image"/>

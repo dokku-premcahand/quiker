@@ -74,7 +74,7 @@ class Products extends CI_Model {
 	}
 
 	//Will return date range between 2 dates.
-	private function generateDateRange($strDateFrom,$strDateTo)
+	public function generateDateRange($strDateFrom,$strDateTo)
 	{
 		$begin = new DateTime($strDateFrom);
 		$end = new DateTime($strDateTo);

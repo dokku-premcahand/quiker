@@ -49,6 +49,12 @@ $(document).ready(function(){
 						html += "<td>"+data[cnt]['phone_number']+"</td>";
 						html += "<td>"+data[cnt]['marital_status']+"</td>";
 						html += "<td>"+data[cnt]['payment_type']+"</td>";
+						html += "<td>"+data[cnt]['aadhar']+"</td>";
+						html += "<td>"+data[cnt]['father_name']+"</td>";
+						html += "<td>"+data[cnt]['father_age']+"</td>";
+						html += "<td>"+data[cnt]['caste']+"</td>";
+						html += "<td>"+data[cnt]['house_type']+"</td>";
+						html += "<td>"+data[cnt]['salary']+"</td>";
 						html += "<td>"+data[cnt]['email']+"</td>";
 						html += "<td>"+data[cnt]['pramoterName']+"</td>";
 						html += "<td>"+data[cnt]['date']+"</td>";

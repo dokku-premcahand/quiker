@@ -77,7 +77,7 @@ class Backoffice extends CI_Controller {
 		$this->form_validation->set_rules('fromDate', 'From Date', 'required');
 		$this->form_validation->set_rules('toDate', 'To Date', 'required');
 		$this->load->model('products');
-
+				
 		if($this->form_validation->run() == FALSE){
 			$product['data'] = $this->products->getAllProducts();
 			
@@ -102,31 +102,42 @@ class Backoffice extends CI_Controller {
 				$objPHPExcel->disconnectWorksheets();
 				$objPHPExcel->createSheet();
 				$objPHPExcel->getActiveSheet()->setTitle("Product Listing");
-
+				
 				// Inserting Data
 				$objPHPExcel->setActiveSheetIndex(0)
-					->setCellValue('A1', 'Sequence')
-					->setCellValue('B1', 'Name')
-					->setCellValue('C1', 'Phone Number')
-					->setCellValue('D1', 'Marital Status')
-					->setCellValue('E1', 'Type')
-					->setCellValue('F1', 'Email')
-					->setCellValue('G1', 'Agent Name')
-					->setCellValue('H1', 'Date');
+					->setCellValue('A1', 'Name')
+					->setCellValue('B1', 'Phone Number')
+					->setCellValue('C1', 'Marital Status')
+					->setCellValue('D1', 'Type')
+					->setCellValue('E1', 'Aadhar')
+					->setCellValue('F1', 'Father Name')
+					->setCellValue('G1', 'Father Age')
+					->setCellValue('H1', 'Caste')
+					->setCellValue('I1', 'House Type')
+					->setCellValue('J1', 'Salary')
+					->setCellValue('K1', 'Email')
+					->setCellValue('L1', 'Agent Name')
+					->setCellValue('M1', 'Date');
+					
 				$cnt = 2;
 				foreach($product['data'] as $tempData){
 					$objPHPExcel->setActiveSheetIndex(0)
-					->setCellValue('A'.$cnt, $tempData->sequence)
-					->setCellValue('B'.$cnt, $tempData->name)
-					->setCellValue('C'.$cnt, $tempData->phone_number)
-					->setCellValue('D'.$cnt, $tempData->marital_status)
-					->setCellValue('E'.$cnt, $tempData->payment_type)
-					->setCellValue('F'.$cnt, $tempData->email)
-					->setCellValue('G'.$cnt, $tempData->pramoterName)
-					->setCellValue('H'.$cnt, $tempData->date);
+					->setCellValue('A'.$cnt, $tempData->name)
+					->setCellValue('B'.$cnt, $tempData->phone_number)
+					->setCellValue('C'.$cnt, $tempData->marital_status)
+					->setCellValue('D'.$cnt, $tempData->payment_type)
+					->setCellValue('E'.$cnt, $tempData->aadhar)
+					->setCellValue('F'.$cnt, $tempData->father_name)
+					->setCellValue('G'.$cnt, $tempData->father_age)
+					->setCellValue('H'.$cnt, $tempData->caste)
+					->setCellValue('I'.$cnt, $tempData->house_type)
+					->setCellValue('J'.$cnt, $tempData->salary)
+					->setCellValue('K'.$cnt, $tempData->email)
+					->setCellValue('L'.$cnt, $tempData->pramoterName)
+					->setCellValue('M'.$cnt, $tempData->date);
 					$cnt++;
 				}
-
+				
 				// Write the file
 				$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $fileType);
 				$objWriter->save($fileName);
@@ -135,6 +146,7 @@ class Backoffice extends CI_Controller {
 				// header("Content-Transfer-Encoding: Binary"); 
 				// header("Content-disposition: attachment; filename=\"".basename($fileName)."\""); 
 				// readfile($fileName);
+				
 				$this->downloadProduct($this->input->post('fromDate'),$this->input->post('toDate'));
 			}else{
 				header('Location:'.base_url('backoffice/product'));
@@ -164,24 +176,39 @@ class Backoffice extends CI_Controller {
 			->setCellValue('A1', 'Name')
 			->setCellValue('B1', 'Phone Number')
 			->setCellValue('C1', 'Marital Status')
-			->setCellValue('D1', 'Email')
-			->setCellValue('E1', 'Agent Name')
-			->setCellValue('F1', 'Date');
+			->setCellValue('D1', 'Type')
+			->setCellValue('E1', 'Aadhar')
+			->setCellValue('F1', 'Father Name')
+			->setCellValue('G1', 'Father Age')
+			->setCellValue('H1', 'Caste')
+			->setCellValue('I1', 'House Type')
+			->setCellValue('J1', 'Salary')
+			->setCellValue('K1', 'Email')
+			->setCellValue('L1', 'Agent Name')
+			->setCellValue('M1', 'Date');
 		$cnt = 2;
 		foreach($product['data'] as $tempData){
 			$objPHPExcel->setActiveSheetIndex(0)
 			->setCellValue('A'.$cnt, $tempData->name)
 			->setCellValue('B'.$cnt, $tempData->phone_number)
 			->setCellValue('C'.$cnt, $tempData->marital_status)
-			->setCellValue('D'.$cnt, $tempData->email)
-			->setCellValue('E'.$cnt, $tempData->pramoterName)
-			->setCellValue('E'.$cnt, $tempData->date);
+			->setCellValue('D'.$cnt, $tempData->payment_type)
+			->setCellValue('E'.$cnt, $tempData->aadhar)
+			->setCellValue('F'.$cnt, $tempData->father_name)
+			->setCellValue('G'.$cnt, $tempData->father_age)
+			->setCellValue('H'.$cnt, $tempData->caste)
+			->setCellValue('I'.$cnt, $tempData->house_type)
+			->setCellValue('J'.$cnt, $tempData->salary)
+			->setCellValue('K'.$cnt, $tempData->email)
+			->setCellValue('L'.$cnt, $tempData->pramoterName)
+			->setCellValue('M'.$cnt, $tempData->date);
 			$cnt++;
 		}
 
 		// Write the file
 		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $fileType);
 		$objWriter->save($fileName);
+		
 		$this->downloadProductSelected($this->input->post());
 	}
 	
@@ -212,12 +239,15 @@ class Backoffice extends CI_Controller {
 	public function downloadProduct($fromDate,$toDate){
 		$this->load->helper('directory');
 		$this->load->library('zip');
+		
 		$dates = $this->products->generateDateRange($fromDate,$toDate);
 		$agents = $this->products->getUniqueAgents($fromDate,$toDate);
 		
 		foreach($dates as $date){
 			$fromPath = 'assets/uploads/'.$date;
 			$toPath = 'assets/imagesZip/'.$date;
+			
+		
 			if(file_exists($fromPath)){
 				foreach($agents as $agent){
 					if(file_exists($fromPath.'/'.$agent)){
