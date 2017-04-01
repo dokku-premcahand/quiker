@@ -88,7 +88,6 @@ class Admin extends CI_Controller {
 	public function exportAgent(){
 		$this->form_validation->set_rules('fromDate', 'From Date', 'required');
 		$this->form_validation->set_rules('toDate', 'To Date', 'required');
-
 		if($this->form_validation->run() == FALSE){
 			$agentData['data'] = $this->agents->getAgentStartDay();
 
@@ -99,7 +98,7 @@ class Admin extends CI_Controller {
 		}else{
 			$agent['data'] = $this->agents->dateAgentSeach($this->input->post());
 			$agent['post'] = $this->input->post();
-
+			
 			//Loading PHPExcel Library
 			$this->load->library('Excel');
 			$fileName = './assets/docs/agent_listing.xlsx';

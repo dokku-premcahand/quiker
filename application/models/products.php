@@ -48,9 +48,9 @@ class Products extends CI_Model {
 		return $dateRange;
 	}
 
-	public function getUniqueAgents(){
+	public function getUniqueAgents($strDateFrom,$strDateTo){
 		$sql = "SELECT distinct ag.username FROM products pd LEFT JOIN agents ag ON ag.id = pd.agent_id 
-		WHERE pd.date BETWEEN '".$post['fromDate']."' AND '".$post['toDate']."'";
+		WHERE pd.date BETWEEN '".$strDateFrom." 00:00:00' AND '".$strDateTo." 23:59:59'";
 		$query=$this->db->query($sql);
 		$resultData=$query->result();
 		$usernameArray = array();
