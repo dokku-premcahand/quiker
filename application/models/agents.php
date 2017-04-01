@@ -110,7 +110,7 @@ class Agents extends CI_Model {
 	public function dateAgentSeach($post){
 		$sql = "SELECT ag.name,DATE_FORMAT(sd.start_date_time,'%d-%m-%Y') as date, DATE_FORMAT(sd.start_date_time,'%h:%i %p')
 				as time FROM agents ag LEFT JOIN start_day sd ON ag.id = sd.agent_id
-				WHERE start_date_time >= '".$post['fromDate']."' AND start_date_time <= '".$post['toDate']."'";
+				WHERE start_date_time >= '".$post['fromDate']." 00:00:00' AND start_date_time <= '".$post['toDate']." 23:59:59'";
 		$query = $this->db->query($sql);
 		$result = $query->result();
 		return $result;

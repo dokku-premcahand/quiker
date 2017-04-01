@@ -1,4 +1,4 @@
-<div class="col-lg-offset-2 col-lg-8">
+<div class="col-lg-12	">
 	<div class="col-lg-12 center"><h3 class="MT0">Product Listing</h3></div>
 	<?php
 		if($this->session->flashdata('error') || validation_errors()){

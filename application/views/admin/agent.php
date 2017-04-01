@@ -33,7 +33,7 @@
 			</thead>
 			<tbody>
 				<?php
-					foreach($newData as $pramoterData){
+					foreach($newData['data'] as $pramoterData){
 				?>
 					<tr>
 						<td><?php echo $pramoterData->id; ?></td>
