@@ -251,7 +251,7 @@ class Backoffice extends CI_Controller {
 			if(file_exists($fromPath)){
 				foreach($agents as $agent){
 					if(file_exists($fromPath.'/'.$agent)){
-						$sequences = $this->products->getAgentSeq($agent);
+						$sequences = $this->products->getAgentSeqFromName($agent);
 						foreach($sequences as $sequence){
 							if(file_exists($fromPath.'/'.$agent.'/'.$sequence)){
 								$folderData = scandir($fromPath.'/'.$agent.'/'.$sequence);
@@ -317,7 +317,7 @@ class Backoffice extends CI_Controller {
 			if(file_exists($fromPath)){
 				foreach($agents as $agent){
 					if(file_exists($fromPath.'/'.$agent)){
-						$sequences = $this->products->getAgentSeq($agent);
+						$sequences = $this->products->getAgentSeq($productStr);
 						foreach($sequences as $sequence){
 							if(file_exists($fromPath.'/'.$agent.'/'.$sequence)){
 								$folderData = scandir($fromPath.'/'.$agent.'/'.$sequence);

@@ -39,7 +39,7 @@ class Products extends CI_Model {
 
 	//Will return max and min dates for complete export
 	public function getMaxMinDates(){
-		$sql = "SELECT max(date) AS maxDate, min(date) AS minDate FROM products WHERE flag <> 1";
+		$sql = "SELECT max(date) AS maxDate, min(date) AS minDate FROM products";
 		$query=$this->db->query($sql);
 		$resultData=$query->result();
 		$data['maxDate'] = substr($resultData[0]->maxDate, 0, 10);
@@ -63,7 +63,20 @@ class Products extends CI_Model {
 	public function getAgentSeq($username){
 		$sql = "SELECT distinct pd.sequence FROM products pd 
 				LEFT JOIN agents ag ON ag.id = pd.agent_id
-				WHERE pd.flag <> 1 AND ag.username LIKE '%".$username."%'";
+				WHERE pd.id IN (".$productStr.")";
+		$query=$this->db->query($sql);
+		$resultData=$query->result();
+		$sequenceArray = array();
+		foreach($resultData as $data){
+			$sequenceArray[] = $data->sequence;
+		}
+		return $sequenceArray;
+	}
+	
+	public function getAgentSeqFromName($username){
+		$sql = "SELECT distinct pd.sequence FROM products pd 
+				LEFT JOIN agents ag ON ag.id = pd.agent_id
+				WHERE ag.username LIKE '%".$username."%'";
 		$query=$this->db->query($sql);
 		$resultData=$query->result();
 		$sequenceArray = array();
