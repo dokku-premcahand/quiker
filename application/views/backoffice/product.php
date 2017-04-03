@@ -71,8 +71,12 @@
 				<?php
 				if (!empty($newData)) {
 					foreach($newData['data'] as $productData){
+						$trClassStr = "";
+						if($productData->is_duplicate == 1){
+							$trClassStr = "class = 'alert alert-danger'";
+						}
 				?>
-					<tr>
+					<tr <?php echo $trClassStr; ?>>
 						<td>
 							<input type="checkbox" name="product[]" id="product_<?php echo $productData->id;?>" value="<?php echo $productData->id;?>"/>
 						</td>

@@ -51,12 +51,30 @@ class Agents extends CI_Model {
 		$agentId = $this->session->userdata('id');
 		$currentTime = date('Y-m-d H:i:s');
 		$sequence = $todayCount + 1;
+		$isDuplicate = $this->getIsDuplicate($post['phonenumber'], $post['aadhar']);
 		
 		$sql = "INSERT INTO products VALUES (null,'".$post['name']."','".$post['phonenumber']."','".$post['marital_status']."', '".$post['payment_type']."', '".$post['aadhar']."', '".$post['father_name']."', '".$post['father_age']."', '".$post['caste']."', '".$post['house_type']."', '".$post['salary']."',
-			'".$post['email']."',0,".$sequence.", ".$agentId.", '".$currentTime."')";
+			'".$post['email']."',0,".$sequence.", ".$agentId.", '".$currentTime."', ".$isDuplicate.")";
 		$this->db->query($sql);
 		$affectedRows = $this->db->affected_rows();
 		return $affectedRows;
+	}
+	
+	private function getIsDuplicate($phoneNumber, $aadhar){
+		$sqlStr = "";
+		$isDuplicate = 0;
+		if(!empty($aadhar)){
+			$sqlStr = " OR aadhar = '".$aadhar."'";
+		}
+		
+		$sql = "SELECT id FROM products where phone_number = '".$phoneNumber."'".$sqlStr;
+		$query=$this->db->query($sql);
+		$result = $query->result();
+		if(!empty($result)){
+			$isDuplicate = 1;
+		}
+		
+		return $isDuplicate;
 	}
 	
 	public function getTodayCount($agentId){

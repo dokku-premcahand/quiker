@@ -4,6 +4,7 @@ $(document).ready(function(){
 	});
 
 	$("#markAsDone").click(function(){
+		$("#changeProductStatus").attr("action",baseURL+"backoffice/changeProductStatus");
 		if($("input[name='product[]']").is(":checked")){
 			$("#changeProductStatus").submit();			
 		}
@@ -42,9 +43,15 @@ $(document).ready(function(){
 					var html="";
 					var id;
 					for(var cnt in data){
-						//console.log(data[cnt]['id']);
+						var trClass = "success";
+						
+						if(data[cnt]['is_duplicate'] == 1){
+							trClass = "alert alert-danger";
+						}
+						
 						id = data[cnt]['id'];
-						html += "<tr class='success'><td>"+data[cnt]['sequence']+"</td>";
+						html += "<tr class='"+trClass+"'><td><input type='checkbox' name='product[]' id='product_"+data[cnt]['id']+"' value='"+data[cnt]['id']+"'></td>";
+						html += "<td>"+data[cnt]['sequence']+"</td>";
 						html += "<td>"+data[cnt]['name']+"</td>";
 						html += "<td>"+data[cnt]['phone_number']+"</td>";
 						html += "<td>"+data[cnt]['marital_status']+"</td>";
@@ -57,8 +64,7 @@ $(document).ready(function(){
 						html += "<td>"+data[cnt]['salary']+"</td>";
 						html += "<td>"+data[cnt]['email']+"</td>";
 						html += "<td>"+data[cnt]['pramoterName']+"</td>";
-						html += "<td>"+data[cnt]['date']+"</td>";
-						html += "<td><input type='checkbox' name=product[]' id='product_"+data[cnt]['id']+"' value='"+data[cnt]['id']+"'></td></tr>";
+						html += "<td>"+data[cnt]['date']+"</td></tr>";
 					}
 					$("#productTable").children('tbody').append(html);
 					$("#latestProductId").val(id);

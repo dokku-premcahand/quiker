@@ -121,7 +121,7 @@
 				</div>
 				<div class="col-lg-6">
 					<input type="radio" id="owned" name="house_type" 
-				value="Ftcash" <?php if(isset($post['house_type']) && $post['house_type'] == 'owned'){echo "checked";} ?>> Owned
+				value="owned" <?php if(isset($post['house_type']) && $post['house_type'] == 'owned'){echo "checked";} ?>> Owned
 				</div>
 			</div>
 		</div>
